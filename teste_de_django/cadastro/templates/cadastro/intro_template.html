@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Tela de Cadastro</title>
+</head>
+<body>
+<a href= {% url "cadastro:post" %}>Cadastrar endereço</a>
+<h1> Endereços Cadastrados</h1>
+{%for cadastro in dados %}
+<table>
+<tr>
+    <td> <b>CEP:</b> {{ cadastro.cep  }}</td>
+    <td> <b>Endereço:</b> {{ cadastro.endereco  }}</td>
+    <td> <b>Número:</b> {{ cadastro.numero  }}</td>
+    <td> <b>Complemento:</b> {{ cadastro.complemento  }}</td>
+    <td> <b>Bairro:</b> {{ cadastro.bairro  }}</td>
+    <td> <b>Cidade:</b> {{ cadastro.cidade  }}</td>
+    <td> <b>UF:</b> {{ cadastro.uf  }}</td>
+    <td> <b>Descrição:</b> {{ cadastro.descricao  }}</td><br>
+</tr>
+</table>
+
+{% endfor %}
+</body>
+</html>

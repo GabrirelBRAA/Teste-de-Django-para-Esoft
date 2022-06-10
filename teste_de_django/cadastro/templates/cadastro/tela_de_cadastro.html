@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastre-se</title>
+</head>
+<body>
+<h1>Cadastre-se</h1>
+<form action={% url 'cadastro:registrar' %} method="post">
+
+    {% csrf_token %}
+
+    <label for="cep">CEP:</label>
+    <input id="cep"  name="cep" type="text" maxlength="9" required pattern="\d{5}-\d{3}" placeholder="00000-000" oninput="return validarCep()" onkeydown="return deletarValor(event)" onchange="return checarViacep()">
+
+    <script type="text/javascript">
+
+    function validarCep(){
+    let input = document.getElementById("cep");
+    let string =input.value;
+    let length= string.length;
+    if (length == 5){
+        novo_valor=string.slice(0,5)
+            +"-"
+            +string.slice(5);
+        input.value=novo_valor ;
+        }else {}
+        };
+
+    function deletarValor(event){
+    let input = document.getElementById("cep");
+    if (event.keyCode === 8 || event.keyCode ===46){
+    input.value="";
+    }
+    }
+
+    function checarViacep(){
+    let input = document.getElementById("cep");
+    let string = input.value;
+    let string_sem_traco= string.slice(0,5)+string.slice(6,9);
+    if (string_sem_traco.length==8 && !isNaN(string_sem_traco)){
+
+    let dados=JSON.parse(pegarDados(string_sem_traco));
+    if (dados){
+    colocarDados(dados);
+
+    }
+    }}
+
+    function pegarDados(cep){
+    let requerimento = new XMLHttpRequest();
+    requerimento.open("GET","https://viacep.com.br/ws/"+cep+"/json/",false);
+    requerimento.send(null);
+    return requerimento.responseText;
+
+    }
+
+    function colocarDados(dados){
+    if (dados.erro){
+    alert("Este CEP parece ser inexistente")
+    return
+    }
+    let cep = document.getElementById("cep");
+    let endereco = document.getElementById("endereco");
+    let complemento = document.getElementById("complemento");
+    let bairro = document.getElementById("bairro");
+    let cidade = document.getElementById("cidade");
+    let uf = document.getElementById("uf");
+
+    cep.value=dados.cep;
+    endereco.value=dados.logradouro;
+    complemento.value=dados.complemento;
+    bairro.value=dados.bairro;
+    cidade.value=dados.localidade;
+    uf.value=dados.uf;
+    }
+    </script>
+
+    <label for="endereco">Endereço:</label>
+    <input id="endereco" name="endereco" type="text" maxlength="100" size="100" required><br>
+
+    <label for="numero">Número:</label>
+    <input id="numero" name="numero" type="number" max="99999" min="0" required>
+
+    <label for="complemento">Complemento:</label>
+    <input id="complemento" name="complemento" type="text" maxlength="20">
+
+    <label for="bairro">Bairro:</label>
+    <input id="bairro" name="bairro" type="text" maxlength="20" required>
+
+    <label for="cidade">Cidade:</label>
+    <input id="cidade" name="cidade" type="text" maxlength="20" required>
+
+    <label for="uf">Estado:</label>
+    <select id="uf" required name="uf">
+        <option value="">Selecione</option>
+        <option value="AC">Acre</option>
+        <option value="AL">Alagoas</option>
+        <option value="AP">Amapá</option>
+        <option value="AM">Amazonas</option>
+        <option value="BA">Bahia</option>
+        <option value="CE">Ceará</option>
+        <option value="DF">Distrito Federal</option>
+        <option value="ES">Espirito Santo</option>
+        <option value="GO">Goiás</option>
+        <option value="MA">Maranhão</option>
+        <option value="MS">Mato Grosso do Sul</option>
+        <option value="MT">Mato Grosso</option>
+        <option value="MG">Minas Gerais</option>
+        <option value="PA">Pará</option>
+        <option value="PB">Paraíba</option>
+        <option value="PR">Paraná</option>
+        <option value="PE">Pernambuco</option>
+        <option value="PI">Piauí</option>
+        <option value="RJ">Rio de Janeiro</option>
+        <option value="RN">Rio Grande do Norte</option>
+        <option value="RS">Rio Grande do Sul</option>
+        <option value="RO">Rondônia</option>
+        <option value="RR">Roraima</option>
+        <option value="SC">Santa Catarina</option>
+        <option value="SP">São Paulo</option>
+        <option value="SE">Sergipe</option>
+        <option value="TO">Tocantins</option>
+    </select><br><br>
+
+    <label for="descricao">Descrição:</label><br>
+    <textarea id="descricao" name="descricao" rows="4" cols="50" maxlength="50"></textarea><br><br>
+
+    <input type="submit" value="Cadastrar">
+
+</form>
+
+</body>
+</html>
